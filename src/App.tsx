@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { Header } from './components/Header'
+import { Main } from './components/Main'
+import { GlobalStyle } from './styles/global'
+import { ThemeProvider } from 'styled-components'
+import { light } from './styles/themes/light'
+import { dark } from './styles/themes/dark'
+import { usePersistedState } from './utils/usePersistedState'
 
-function App() {
+import type { DefaultTheme } from 'styled-components'
+
+const App: React.FC = () => {
+  const [theme, setTheme] = usePersistedState<DefaultTheme>('@app-theme', light)
+
+  function handleThemeSwitching (): void {
+    setTheme(theme.title === 'light' ? dark : light)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ThemeProvider theme={theme}>
+      <Header onThemeSwitch={handleThemeSwitching} />
+      <Main />
+      <GlobalStyle />
+    </ThemeProvider>
+  )
 }
 
-export default App;
+export default App
